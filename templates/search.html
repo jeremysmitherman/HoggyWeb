@@ -1,0 +1,21 @@
+{% extends "main.html" %}
+{% block title %}Hoggy Search{% endblock %}
+{% block body %}
+<div class='search form-group'>
+    <label for="search">Search</label>
+    <input class="form-control" id="search" />
+</div>
+
+<table id="resultstable" class='table-striped table-bordered search-table'>
+    {% for quote in quotes %}
+    <tr>
+        <td width=55>{{ quote.id }}</td>
+        <td>{{ quote.body }}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}
+
+{% block tailscripts %}
+<script src="static/autocomplete.js"></script>
+{% endblock %}

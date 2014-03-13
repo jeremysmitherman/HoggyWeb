@@ -1,2 +1,16 @@
-help
-fdsfsd
+{% extends "main.html" %}
+{% block body %}
+    <table class="table-bordered table-striped search-table">
+    {% for key,class in classes.iteritems(): %}
+        <tr>
+            <td valign="top" width=150>
+                {{ key }}
+            </td>
+            <td valign="top">
+                <p>{{ class.shortdesc }}</p>
+                <p class="text-muted">{{ class.longdesc }}&nbsp;</p>
+            </td>
+        </tr>
+    {% endfor %}
+    </table>
+{% endblock %}

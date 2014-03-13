@@ -24,12 +24,14 @@ env = Environment(loader=FileSystemLoader(os.path.join(os.path.dirname(os.path.r
 config = ConfigParser.RawConfigParser()
 config.read("config.ini")
 hoggy_config = ConfigParser.RawConfigParser()
-hoggy_config.read(config.get('hoggy', 'config'))
+hoggy_config.read(config.get('hoggy', 'location') + '/config.ini')
+sys.path.append(config.get('hoggy', 'location'))
+import actions
 log.info("Config loaded")
 
 # Setup DB 
 log.debug("Loading database")
-config_folder = os.path.dirname(os.path.realpath(config.get('hoggy', 'config')))
+config_folder = os.path.dirname(os.path.realpath(config.get('hoggy', 'location'))) + "/Application"
 if hoggy_config.get('db','type') != 'mysql':
     sqlite_file = os.path.join(config_folder, hoggy_config.get('db', 'file'))
     engine = create_engine('sqlite:///%s' % sqlite_file)
@@ -66,7 +68,7 @@ class Quote(Base):
 
 
 app = Flask(__name__, static_folder='static')
-app.debug = False
+app.debug = True
 
 @app.route("/")
 def index():
@@ -92,7 +94,11 @@ def search():
             })
         return json.dumps(to_return)
 
-
+@app.route("/help")
+def help():
+    classes = actions.Commander.actions
+    tmpl = env.get_template('help.html')
+    return tmpl.render(classes=classes)
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=8080)

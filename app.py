@@ -22,14 +22,16 @@ log.addHandler(streamhandler)
 log.debug("Reading config")
 env = Environment(loader=FileSystemLoader(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'templates')))
 config = ConfigParser.RawConfigParser()
-config.read(sys.argv[1])
+config.read("config.ini")
+hoggy_config = ConfigParser.RawConfigParser()
+hoggy_config.read(config.get('hoggy', 'config'))
 log.info("Config loaded")
 
 # Setup DB 
 log.debug("Loading database")
-config_folder = os.path.dirname(os.path.realpath(sys.argv[1]))
-if config.get('db','type') != 'mysql':
-    sqlite_file = os.path.join(config_folder, config.get('db', 'file'))
+config_folder = os.path.dirname(os.path.realpath(config.get('hoggy', 'config')))
+if hoggy_config.get('db','type') != 'mysql':
+    sqlite_file = os.path.join(config_folder, hoggy_config.get('db', 'file'))
     engine = create_engine('sqlite:///%s' % sqlite_file)
 log.info("Database loaded")
 
